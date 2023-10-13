@@ -2,9 +2,7 @@
 
 **computer_slow_turn_off** - is visual effect application. It slowly shuts down your computer. See gif to understand how it looks like. Windows only.
 
-
-
-
+![How it looks like](how_it_looks_like.gif)
 
 I use this program on my kids computers' so they don't cry when it's time to go to sleep. This way they see when the computer is going to be turned off and have 5 minutes to close their games.
 
