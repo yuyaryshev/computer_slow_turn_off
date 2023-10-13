@@ -6,9 +6,15 @@
 
 I use this program on my kids computers' so they don't cry when it's time to go to sleep. This way they see when the computer is going to be turned off and have 5 minutes to close their games.
 
-Usage:
+# Installation
 
-- Use system scheduler to start the program at any time you want
+Just download `computer_slow_turn_off.exe` 
+
+Or you can compile it yourself using Visual Studio Community.
+
+# Usage
+
+- Use system scheduler to start the program at any time you want.
 
 - **settings.json** file will be automatically created after the first run. You can change settings in it.
 
