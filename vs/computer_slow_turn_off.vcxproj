@@ -39,13 +39,22 @@
   <Import Project="$(CPP_LIB)\lo_console_post.props" />
   <ItemGroup>
     <ClInclude Include="..\src\json.hpp" />
+    <ClInclude Include="..\src\ScreenDimmer.h" />
+    <ClInclude Include="..\src\settings.h" />
     <ClInclude Include="..\src\stdafx.h" />
+    <ClInclude Include="..\src\utilFuncs.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\main.cpp" />
+    <ClCompile Include="..\src\ScreenDimmer.cpp" />
+    <ClCompile Include="..\src\settings.cpp" />
     <ClCompile Include="..\src\stdafx.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="..\src\utilFuncs.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\src\settings.json" />
   </ItemGroup>
   <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
