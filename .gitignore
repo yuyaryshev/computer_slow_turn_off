@@ -33,3 +33,4 @@
 /nodejs_wrapper/build/.vs
 /nodejs_wrapper/build/Release
 /nodejs_wrapper/build
+/nodejs_wrapper/node_modules

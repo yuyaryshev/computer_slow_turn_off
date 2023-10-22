@@ -1,7 +1,7 @@
 // addon.cpp
 #include <node.h>
 #include <node_object_wrap.h>
-#include "../../src/ScreenDimmer.h"
+#include "..\..\src\ScreenDimmer.h"
 
 namespace {
 

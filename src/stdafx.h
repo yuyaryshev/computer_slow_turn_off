@@ -5,8 +5,6 @@
 
 #pragma once
 
-//#include "lo_common.h"
-
 #define _WIN32_WINNT 0x500
 #include <windows.h>
 #include <tchar.h>
@@ -15,5 +13,5 @@
 #include <string>
 #include <fstream>
 #include <iostream>
-#include <json.hpp>
 #include <algorithm>
+#include "json.hpp"

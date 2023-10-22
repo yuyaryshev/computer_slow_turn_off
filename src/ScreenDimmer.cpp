@@ -1,4 +1,4 @@
-#include "stdafx.h"
+//#include "stdafx.h"
 
 #define _WIN32_WINNT 0x500
 
@@ -7,7 +7,6 @@
 #include <CommCtrl.h>
 #include <fstream>
 #include <iostream>
-#include "json.hpp"
 #include <algorithm>
 
 #include "utilFuncs.h"

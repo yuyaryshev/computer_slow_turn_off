@@ -5,9 +5,12 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-	"build": "node-gyp configure build"
+    "build": "node-gyp configure build"
   },
   "keywords": [],
   "author": "Yuri Yaryshev",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "node-addon-api": "^7.0.0"
+  }
 }
