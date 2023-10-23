@@ -1,7 +1,7 @@
 // addon.cpp
 #include <node.h>
 #include <node_object_wrap.h>
-#include "..\..\src\ScreenDimmer.h"
+#include "ScreenDimmer.h"
 
 namespace {
 
@@ -17,8 +17,9 @@ namespace {
             tpl->InstanceTemplate()->SetInternalFieldCount(1);
 
             // Prototype
-            NODE_SET_PROTOTYPE_METHOD(tpl, "getState", GetState);
-            NODE_SET_PROTOTYPE_METHOD(tpl, "setState", SetState);
+            NODE_SET_PROTOTYPE_METHOD(tpl, "getState", getState);
+            NODE_SET_PROTOTYPE_METHOD(tpl, "setState", setState);
+            NODE_SET_PROTOTYPE_METHOD(tpl, "systemShutdown", systemShutdown);
             // Add other functions here...
 
             constructor.Reset(isolate, tpl->GetFunction(context).ToLocalChecked());
@@ -48,7 +49,7 @@ namespace {
             }
         }
 
-        static void GetState(const v8::FunctionCallbackInfo<v8::Value>& args) {
+        static void getState(const v8::FunctionCallbackInfo<v8::Value>& args) {
             v8::Isolate* isolate = args.GetIsolate();
             v8::Local<v8::Context> context = isolate->GetCurrentContext();
 
@@ -58,7 +59,7 @@ namespace {
             args.GetReturnValue().Set(v8::Number::New(isolate, state));
         }
 
-        static void SetState(const v8::FunctionCallbackInfo<v8::Value>& args) {
+        static void setState(const v8::FunctionCallbackInfo<v8::Value>& args) {
             v8::Isolate* isolate = args.GetIsolate();
             v8::Local<v8::Context> context = isolate->GetCurrentContext();
 
@@ -74,7 +75,17 @@ namespace {
             obj->screenDimmer_->setState(state);
             args.GetReturnValue().SetUndefined();
         }
+		
+        static void systemShutdown(const v8::FunctionCallbackInfo<v8::Value>& args) {
+            v8::Isolate* isolate = args.GetIsolate();
+            v8::Local<v8::Context> context = isolate->GetCurrentContext();
 
+            ScreenDimmerWrapper* obj = ObjectWrap::Unwrap<ScreenDimmerWrapper>(args.Holder());
+
+            obj->screenDimmer_->systemShutdown();
+            args.GetReturnValue().SetUndefined();
+        }
+		
         // Add other function implementations...
 
         static v8::Persistent<v8::Function> constructor;

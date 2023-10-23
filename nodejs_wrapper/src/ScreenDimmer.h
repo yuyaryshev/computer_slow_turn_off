@@ -20,4 +20,6 @@ public:
 
 	bool isPasswordEntered();
 	void resetPasswordEntered();
+	
+	void systemShutdown();
 };

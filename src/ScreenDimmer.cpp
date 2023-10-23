@@ -91,6 +91,12 @@ void ScreenDimmer::resetPasswordEntered() {
 	d->isPasswordEntered = false;
 }
 
+void ScreenDimmer::systemShutdown() {
+	std::string shutdownCmd = "shutdown /s /t 30 /c \"The computer will shutdown after 30 seconds\"";
+	system(shutdownCmd.c_str());
+	ExitWindows(EWX_POWEROFF | EWX_FORCEIFHUNG, SHTDN_REASON_FLAG_PLANNED);
+}
+
 static double adjustedProgress(double p) {
 		if (p < 1.0) {
 			return p * 0.4;
@@ -126,18 +132,28 @@ void ScreenDimmer::refresh() {
 			d->leftWindow = CreateTopMostWindow(d);
 			d->rightWindow = CreateTopMostWindow(d);
 			d->progressBar = CreateProgressBar(d, d->topWindow);
+			
+			ShowWindow(d->topWindow, SW_SHOW);
+			ShowWindow(d->bottomWindow, SW_SHOW);
+			ShowWindow(d->leftWindow, SW_SHOW);
+			ShowWindow(d->rightWindow, SW_SHOW);
 		}
 		else {
-			DestroyTopMostWindow(d->topWindow);
-			DestroyTopMostWindow(d->bottomWindow);
-			DestroyTopMostWindow(d->leftWindow);
-			DestroyTopMostWindow(d->rightWindow);
+			ShowWindow(d->topWindow, SW_HIDE);
+			ShowWindow(d->bottomWindow, SW_HIDE);
+			ShowWindow(d->leftWindow, SW_HIDE);
+			ShowWindow(d->rightWindow, SW_HIDE);
+			
+			//DestroyTopMostWindow(d->topWindow);
+			//DestroyTopMostWindow(d->bottomWindow);
+			//DestroyTopMostWindow(d->leftWindow);
+			//DestroyTopMostWindow(d->rightWindow);
 
-			d->topWindow = 0;
-			d->bottomWindow = 0;
-			d->leftWindow = 0;
-			d->rightWindow = 0;
-			d->progressBar = 0;
+			//d->topWindow = 0;
+			//d->bottomWindow = 0;
+			//d->leftWindow = 0;
+			//d->rightWindow = 0;
+			//d->progressBar = 0;
 		}
 	}
 
