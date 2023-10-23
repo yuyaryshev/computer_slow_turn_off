@@ -1,4 +1,4 @@
-const addon = require('./build/Release/ScreenDimmer');
+const {ScreenDimmer} = require('./index.js');
 
 function awaitDelay(delay) {
 	return new Promise(resolve=>{
@@ -40,7 +40,7 @@ async function main() {
 const screenWidth = 1920; 
 const screenHeight = 1080;
 
-const screenDimmer = new addon.ScreenDimmer(screenWidth, screenHeight);
+const screenDimmer = new ScreenDimmer(screenWidth, screenHeight);
 const newState = 0.5;
 screenDimmer.setState(newState);
 

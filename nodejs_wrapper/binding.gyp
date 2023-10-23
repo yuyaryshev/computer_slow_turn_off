@@ -8,12 +8,12 @@
       "defines": [ "_UNICODE", "UNICODE", "NAPI_CPP_EXCEPTIONS"],
       "include_dirs": [
         "<!@(node -p \"require('node-addon-api').include\")>",
-        "../../src"
+        "src"
       ],
       "sources": [
         "src/addon.cpp",
-        "../src/ScreenDimmer.cpp",
-		"../src/utilFuncs.cpp"
+        "src/ScreenDimmer.cpp",
+		"src/utilFuncs.cpp"
       ],
 	  "ldflags": [
         "-lstdc++"
