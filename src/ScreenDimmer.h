@@ -12,6 +12,10 @@ public:
 
 	double getState();
 	void setState(double state);	
+	
+	double getStateMax();
+	void setStateMax();
+	
 	void incrementState(double additionToState);
 	void refresh();
 

@@ -19,6 +19,8 @@ namespace {
             // Prototype
             NODE_SET_PROTOTYPE_METHOD(tpl, "getState", getState);
             NODE_SET_PROTOTYPE_METHOD(tpl, "setState", setState);
+            NODE_SET_PROTOTYPE_METHOD(tpl, "getStateMax", getStateMax);
+            NODE_SET_PROTOTYPE_METHOD(tpl, "setStateMax", setStateMax);
             NODE_SET_PROTOTYPE_METHOD(tpl, "systemShutdown", systemShutdown);
             // Add other functions here...
 
@@ -73,6 +75,26 @@ namespace {
 
             double state = args[0]->NumberValue(context).FromMaybe(0);
             obj->screenDimmer_->setState(state);
+            args.GetReturnValue().SetUndefined();
+        }
+		
+        static void getStateMax(const v8::FunctionCallbackInfo<v8::Value>& args) {
+            v8::Isolate* isolate = args.GetIsolate();
+            v8::Local<v8::Context> context = isolate->GetCurrentContext();
+
+            ScreenDimmerWrapper* obj = ObjectWrap::Unwrap<ScreenDimmerWrapper>(args.Holder());
+
+            double state = obj->screenDimmer_->getStateMax();
+            args.GetReturnValue().Set(v8::Number::New(isolate, state));
+        }
+
+        static void setStateMax(const v8::FunctionCallbackInfo<v8::Value>& args) {
+            v8::Isolate* isolate = args.GetIsolate();
+            v8::Local<v8::Context> context = isolate->GetCurrentContext();
+
+            ScreenDimmerWrapper* obj = ObjectWrap::Unwrap<ScreenDimmerWrapper>(args.Holder());
+
+            obj->screenDimmer_->setStateMax();
             args.GetReturnValue().SetUndefined();
         }
 		

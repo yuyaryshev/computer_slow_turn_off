@@ -71,6 +71,14 @@ void ScreenDimmer::setState(double state) {
 	refresh();
 };
 
+double ScreenDimmer::getStateMax() {
+	return 1.3;
+};
+
+void ScreenDimmer::setStateMax() {
+	setState(getStateMax());
+};
+
 void ScreenDimmer::incrementState(double additionToState) {
 	setState(getState() + additionToState);
 };
