@@ -1,4 +1,4 @@
-//#include "stdafx.h"
+#include "stdafx.h"
 
 #define _WIN32_WINNT 0x500
 
@@ -21,7 +21,7 @@ struct ScreenDimmerData {
 	long screenHeight;
 	double state = 0;
 	double progressBarOffset = 0.05;
-	long topWinMinHeight = 32;
+	long topWinMinHeight = 12;
 
 	std::string inputHolder;
 	std::string password = "stop";
@@ -107,10 +107,12 @@ void ScreenDimmer::systemShutdown() {
 
 static double adjustedProgress(double p) {
 		if (p < 1.0) {
-			return p * 0.4;
+			return 0;// p * 0.4;
 		}
-		return 1.0 * 0.4 + (p - 1.0) * 5;
-	}
+
+//		return 1.0 * 0.4 + (p - 1.0) * 5;
+		return (p - 1.0) * 10;
+}
 
 void ScreenDimmer::refresh() {
 	bool o_progressBarVisible = d->progressBarVisible;
@@ -121,6 +123,7 @@ void ScreenDimmer::refresh() {
 	long blackoutWidth= (long)(adjustedProgress(d->state) * d->screenWidth / 2);
 	long blackoutHeight = (long)(adjustedProgress(d->state) * d->screenHeight / 2);
 	long topWinBlackoutHeight = blackoutHeight < d->topWinMinHeight ? d->topWinMinHeight : blackoutHeight;
+	topWinBlackoutHeight = d->topWinMinHeight;
 
 	d->progressPos = (int)((1.0 - d->state) * 10000);
 
@@ -180,8 +183,8 @@ void ScreenDimmer::refresh() {
 
 	UpdateWindowSize(d->topWindow, 0, 0, d->screenWidth, topWinBlackoutHeight);
 	UpdateWindowSize(d->bottomWindow, 0, d->screenHeight - blackoutHeight, d->screenWidth, blackoutHeight + winAntiGlitterSize);
-	UpdateWindowSize(d->leftWindow, 0, blackoutHeight - winAntiGlitterSize, blackoutWidth, d->screenHeight - 2 * blackoutHeight + winAntiGlitterSize * 2);
-	UpdateWindowSize(d->rightWindow, d->screenWidth - blackoutWidth, blackoutHeight - winAntiGlitterSize, blackoutWidth + winAntiGlitterSize, d->screenHeight - 2 * blackoutHeight + winAntiGlitterSize * 2);
+	UpdateWindowSize(d->leftWindow, 0, topWinBlackoutHeight, blackoutWidth, d->screenHeight - blackoutHeight + winAntiGlitterSize * 2 + topWinBlackoutHeight);
+	UpdateWindowSize(d->rightWindow, d->screenWidth - blackoutWidth, topWinBlackoutHeight, blackoutWidth + winAntiGlitterSize, d->screenHeight -  blackoutHeight + winAntiGlitterSize * 2 + topWinBlackoutHeight);
 };
 
 static void UpdateWindowSize(HWND hwnd, int x, int y, int width, int height) {
@@ -238,9 +241,9 @@ static void DestroyTopMostWindow(HWND hwnd) {
 
 static HWND CreateProgressBar(ScreenDimmerData* d, HWND parent) {
 	const int ProgressBarX = (int)(d->screenWidth * d->progressBarOffset / 2.0);
-	const int ProgressBarY = 10;
+	const int ProgressBarY = 1;
 	const int ProgressBarWidth = (int)(d->screenWidth * (1 - d->progressBarOffset));
-	const int ProgressBarHeight = 10;
+	const int ProgressBarHeight = 8;
 
 	HWND progressBar = CreateWindowEx(
 		0,
