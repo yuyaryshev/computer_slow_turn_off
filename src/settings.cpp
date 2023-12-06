@@ -36,6 +36,7 @@ Settings LoadSettings() {
         settingsJson["ScreenHeight"] = settings.ScreenHeight;
         settingsJson["ShutdownDelay"] = settings.shutdownDelay;
         settingsJson["password"] = settings.password;
+        settingsJson["remove_this_setting"] = 1;
 
         std::ofstream outFile("settings.json");
         if (outFile.is_open()) {
@@ -53,7 +54,6 @@ Settings LoadSettings() {
     settings.shutdownDelay = settingsJson.value("ShutdownDelay", 0.001);
     settings.password = settingsJson.value("password", "stop");
     settings.doShutdown = !!settingsJson.value("shutdown", 1);
-    settings.UpdateStep = (TimerInterval * fullProgress) / settings.shutdownDelay;
-
+    settings.removeThisSetting = settingsJson.value("remove_this_setting", 0);
     return settings;
 }

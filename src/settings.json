@@ -1,6 +1,6 @@
 {
     "ScreenHeight": 1080,
     "ScreenWidth": 1920,
-    "ShutdownDelay": 60000.0,
+    "ShutdownDelay": 600000.0,
 	"password":"stop" 
 }

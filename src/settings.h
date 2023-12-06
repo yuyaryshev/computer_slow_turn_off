@@ -9,7 +9,7 @@ struct Settings {
     double shutdownDelay = 10000;
     std::string password = "stop";
     bool doShutdown = true;
-    double UpdateStep = 0.001;
+    bool removeThisSetting = 0;
 };
 
 Settings LoadSettings();
