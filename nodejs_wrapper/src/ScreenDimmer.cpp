@@ -27,6 +27,7 @@ struct ScreenDimmerData {
 
 	std::string inputHolder;
 	std::string password = "stop";
+	std::string message = "";
 	bool isPasswordEntered = false;
 
 	bool winsExist = false;
@@ -100,6 +101,14 @@ const std::string& ScreenDimmer::getPassword() {
 
 void ScreenDimmer::setPassword(const std::string& password) {
 	d->password = password;
+};
+
+const std::string& ScreenDimmer::getMessage() {
+	return d->message;
+}
+
+void ScreenDimmer::setMessage(const std::string& message) {
+	d->message = message;
 };
 
 bool ScreenDimmer::isPasswordEntered() {

@@ -24,6 +24,8 @@ namespace {
             NODE_SET_PROTOTYPE_METHOD(tpl, "incrementState", incrementState);
             NODE_SET_PROTOTYPE_METHOD(tpl, "getPassword", getPassword);
             NODE_SET_PROTOTYPE_METHOD(tpl, "setPassword", setPassword);
+            NODE_SET_PROTOTYPE_METHOD(tpl, "getMessage", getMessage);
+            NODE_SET_PROTOTYPE_METHOD(tpl, "setMessage", setMessage);
             NODE_SET_PROTOTYPE_METHOD(tpl, "isPasswordEntered", isPasswordEntered);
             NODE_SET_PROTOTYPE_METHOD(tpl, "resetPasswordEntered", resetPasswordEntered);
 
@@ -150,6 +152,24 @@ namespace {
             v8::String::Utf8Value password(isolate, args[0]);
             ScreenDimmerWrapper* obj = ObjectWrap::Unwrap<ScreenDimmerWrapper>(args.Holder());
             obj->screenDimmer_->setPassword(*password);
+        }
+
+        static void getMessage(const v8::FunctionCallbackInfo<v8::Value>& args) {
+            v8::Isolate* isolate = args.GetIsolate();
+            ScreenDimmerWrapper* obj = ObjectWrap::Unwrap<ScreenDimmerWrapper>(args.Holder());
+            args.GetReturnValue().Set(v8::String::NewFromUtf8(isolate, obj->screenDimmer_->getMessage().c_str()).ToLocalChecked());
+        }
+
+        static void setMessage(const v8::FunctionCallbackInfo<v8::Value>& args) {
+            v8::Isolate* isolate = args.GetIsolate();
+            if (args.Length() < 1 || !args[0]->IsString()) {
+                isolate->ThrowException(v8::Exception::TypeError(
+                    v8::String::NewFromUtf8(isolate, "Expected a string").ToLocalChecked()));
+                return;
+            }
+            v8::String::Utf8Value message(isolate, args[0]);
+            ScreenDimmerWrapper* obj = ObjectWrap::Unwrap<ScreenDimmerWrapper>(args.Holder());
+            obj->screenDimmer_->setMessage(*message);
         }
 
         static void isPasswordEntered(const v8::FunctionCallbackInfo<v8::Value>& args) {

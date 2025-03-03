@@ -22,6 +22,9 @@ public:
 	const std::string& getPassword();
 	void setPassword(const std::string& password);
 
+	const std::string& getMessage();
+	void setMessage(const std::string& message);
+
 	bool isPasswordEntered();
 	void resetPasswordEntered();
 	
