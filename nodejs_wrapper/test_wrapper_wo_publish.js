@@ -1,4 +1,6 @@
-const {ScreenDimmer} = require('./index.js');
+const path = require("node:path");
+//const {ScreenDimmer} = require('./index.js');
+const {ScreenDimmer} = require(path.join(__dirname, 'build', 'Debug', 'ScreenDimmer.node'));
 
 function awaitDelay(delay) {
 	return new Promise(resolve=>{
@@ -23,7 +25,7 @@ async function main() {
 	const version = screenDimmer.getVersion();
 	console.log(`CODE00000000 getVersion()=${version}`);
 
-	return
+//	return
 	
 	const pass = screenDimmer.getPassword();		
 	console.log(`CODE00000000 password=${pass}`);

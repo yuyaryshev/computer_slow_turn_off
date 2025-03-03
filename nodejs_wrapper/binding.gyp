@@ -5,7 +5,7 @@
       "cflags!": [ "-fno-exceptions" ],
       "cflags_cc!": [ "-fno-exceptions" ],
 	  "cflags_cc": ["-std=c++17"],
-      "defines": [ "_UNICODE", "UNICODE", "NAPI_CPP_EXCEPTIONS"],
+      "defines": [  "NAPI_CPP_EXCEPTIONS"],
       "include_dirs": [
         "<!@(node -p \"require('node-addon-api').include\")>",
         "src"

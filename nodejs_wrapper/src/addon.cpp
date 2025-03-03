@@ -11,23 +11,25 @@ namespace {
             v8::Isolate* isolate = exports->GetIsolate();
             v8::Local<v8::Context> context = isolate->GetCurrentContext();
 
-            // Prepare constructor template
             v8::Local<v8::FunctionTemplate> tpl = v8::FunctionTemplate::New(isolate, New);
             tpl->SetClassName(v8::String::NewFromUtf8(isolate, "ScreenDimmer").ToLocalChecked());
             tpl->InstanceTemplate()->SetInternalFieldCount(1);
 
-            // Prototype
+            NODE_SET_PROTOTYPE_METHOD(tpl, "getVersion", getVersion);
             NODE_SET_PROTOTYPE_METHOD(tpl, "getState", getState);
             NODE_SET_PROTOTYPE_METHOD(tpl, "setState", setState);
             NODE_SET_PROTOTYPE_METHOD(tpl, "getStateMax", getStateMax);
             NODE_SET_PROTOTYPE_METHOD(tpl, "setStateMax", setStateMax);
             NODE_SET_PROTOTYPE_METHOD(tpl, "systemShutdown", systemShutdown);
-            // Add other functions here...
+            NODE_SET_PROTOTYPE_METHOD(tpl, "incrementState", incrementState);
+            NODE_SET_PROTOTYPE_METHOD(tpl, "getPassword", getPassword);
+            NODE_SET_PROTOTYPE_METHOD(tpl, "setPassword", setPassword);
+            NODE_SET_PROTOTYPE_METHOD(tpl, "isPasswordEntered", isPasswordEntered);
+            NODE_SET_PROTOTYPE_METHOD(tpl, "resetPasswordEntered", resetPasswordEntered);
 
             constructor.Reset(isolate, tpl->GetFunction(context).ToLocalChecked());
             exports->Set(context, v8::String::NewFromUtf8(isolate, "ScreenDimmer").ToLocalChecked(), tpl->GetFunction(context).ToLocalChecked()).IsNothing();
         }
-
     private:
         explicit ScreenDimmerWrapper(long screenWidth, long screenHeight) {
             screenDimmer_ = new ScreenDimmer(screenWidth, screenHeight);
@@ -49,6 +51,14 @@ namespace {
                 obj->Wrap(args.This());
                 args.GetReturnValue().Set(args.This());
             }
+        }
+
+        static void getVersion(const v8::FunctionCallbackInfo<v8::Value>& args) {
+            v8::Isolate* isolate = args.GetIsolate();
+            v8::Local<v8::Context> context = isolate->GetCurrentContext();
+
+            double state = 1.001;
+            args.GetReturnValue().Set(v8::Number::New(isolate, state));
         }
 
         static void getState(const v8::FunctionCallbackInfo<v8::Value>& args) {
@@ -108,7 +118,51 @@ namespace {
             args.GetReturnValue().SetUndefined();
         }
 		
-        // Add other function implementations...
+
+        static void incrementState(const v8::FunctionCallbackInfo<v8::Value>& args) {
+            v8::Isolate* isolate = args.GetIsolate();
+            v8::Local<v8::Context> context = isolate->GetCurrentContext();
+
+            if (args.Length() < 1 || !args[0]->IsNumber()) {
+                isolate->ThrowException(v8::Exception::TypeError(
+                    v8::String::NewFromUtf8(isolate, "Expected a number").ToLocalChecked()));
+                return;
+            }
+
+            ScreenDimmerWrapper* obj = ObjectWrap::Unwrap<ScreenDimmerWrapper>(args.Holder());
+            double increment = args[0]->NumberValue(context).FromMaybe(0);
+            obj->screenDimmer_->incrementState(increment);
+        }
+
+        static void getPassword(const v8::FunctionCallbackInfo<v8::Value>& args) {
+            v8::Isolate* isolate = args.GetIsolate();
+            ScreenDimmerWrapper* obj = ObjectWrap::Unwrap<ScreenDimmerWrapper>(args.Holder());
+            args.GetReturnValue().Set(v8::String::NewFromUtf8(isolate, obj->screenDimmer_->getPassword().c_str()).ToLocalChecked());
+        }
+
+        static void setPassword(const v8::FunctionCallbackInfo<v8::Value>& args) {
+            v8::Isolate* isolate = args.GetIsolate();
+            if (args.Length() < 1 || !args[0]->IsString()) {
+                isolate->ThrowException(v8::Exception::TypeError(
+                    v8::String::NewFromUtf8(isolate, "Expected a string").ToLocalChecked()));
+                return;
+            }
+            v8::String::Utf8Value password(isolate, args[0]);
+            ScreenDimmerWrapper* obj = ObjectWrap::Unwrap<ScreenDimmerWrapper>(args.Holder());
+            obj->screenDimmer_->setPassword(*password);
+        }
+
+        static void isPasswordEntered(const v8::FunctionCallbackInfo<v8::Value>& args) {
+            v8::Isolate* isolate = args.GetIsolate();
+            ScreenDimmerWrapper* obj = ObjectWrap::Unwrap<ScreenDimmerWrapper>(args.Holder());
+            args.GetReturnValue().Set(v8::Boolean::New(isolate, obj->screenDimmer_->isPasswordEntered()));
+        }
+
+        static void resetPasswordEntered(const v8::FunctionCallbackInfo<v8::Value>& args) {
+            ScreenDimmerWrapper* obj = ObjectWrap::Unwrap<ScreenDimmerWrapper>(args.Holder());
+            obj->screenDimmer_->resetPasswordEntered();
+        }
+
 
         static v8::Persistent<v8::Function> constructor;
         ScreenDimmer* screenDimmer_;
