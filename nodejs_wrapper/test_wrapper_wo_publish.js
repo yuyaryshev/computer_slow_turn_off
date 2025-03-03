@@ -30,8 +30,9 @@ async function main() {
 	const pass = screenDimmer.getPassword();		
 	console.log(`CODE00000000 password=${pass}`);
 	
-	screenDimmer.setState(1);
-	for(let i=0; i<200; i++) {
+	screenDimmer.setState(0);
+//	screenDimmer.setState(1);
+	for(let i=0; i<20000; i++) {
 		if(screenDimmer.isPasswordEntered()) {
 			return;
 		}

@@ -1,0 +1,5 @@
+Debugging properties
+
+node.exe
+test_wrapper_wo_publish.js
+$(ProjectDir)\..
