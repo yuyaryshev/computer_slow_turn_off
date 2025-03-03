@@ -1,5 +1,4 @@
 // ScreenDimmer.cpp
-
 //#include "stdafx.h"
 
 #define _WIN32_WINNT 0x500
@@ -27,7 +26,7 @@ struct ScreenDimmerData {
 
 	std::string inputHolder;
 	std::string password = "stop";
-	std::string message = "";
+	std::string message = "Hello this is some kind of a long message to show. Это какой-то длинный текст";
 	bool isPasswordEntered = false;
 
 	bool winsExist = false;
@@ -39,6 +38,7 @@ struct ScreenDimmerData {
 	HWND leftWindow = 0;
 	HWND rightWindow = 0;
 	HWND progressBar = 0;
+	HWND messageLabel = 0;
 
 	int progressPos = 0;
 };
@@ -46,9 +46,13 @@ struct ScreenDimmerData {
 static LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 static HWND CreateTopMostWindow(ScreenDimmerData* d);
 static HWND CreateProgressBar(ScreenDimmerData* d, HWND parent);
+static HWND CreateMessageLabel(ScreenDimmerData* d, HWND parent);
+static void UpdateMessageLabel(ScreenDimmerData* d);
+static void UpdateWindowSize(HWND hwnd, int x, int y, int width, int height);
 static void DestroyTopMostWindow(HWND hwnd);
 static void UpdateWindowSize(HWND hwnd, int x, int y, int width, int height);
 static double adjustedProgress(double p);
+
 
 static void YDoEventLoop() {
 	MSG msg;
@@ -161,7 +165,8 @@ void ScreenDimmer::refresh() {
 			d->leftWindow = CreateTopMostWindow(d);
 			d->rightWindow = CreateTopMostWindow(d);
 			d->progressBar = CreateProgressBar(d, d->topWindow);
-			
+			d->messageLabel = CreateMessageLabel(d, d->topWindow);
+
 			ShowWindow(d->topWindow, SW_SHOW);
 			ShowWindow(d->bottomWindow, SW_SHOW);
 			ShowWindow(d->leftWindow, SW_SHOW);
@@ -203,6 +208,8 @@ void ScreenDimmer::refresh() {
 	UpdateWindowSize(d->bottomWindow, 0, d->screenHeight - blackoutHeight, d->screenWidth, blackoutHeight + winAntiGlitterSize);
 	UpdateWindowSize(d->leftWindow, 0, blackoutHeight - winAntiGlitterSize, blackoutWidth, d->screenHeight - 2 * blackoutHeight + winAntiGlitterSize * 2);
 	UpdateWindowSize(d->rightWindow, d->screenWidth - blackoutWidth, blackoutHeight - winAntiGlitterSize, blackoutWidth + winAntiGlitterSize, d->screenHeight - 2 * blackoutHeight + winAntiGlitterSize * 2);
+
+	UpdateMessageLabel(d);
 };
 
 static void UpdateWindowSize(HWND hwnd, int x, int y, int width, int height) {
@@ -280,4 +287,37 @@ static HWND CreateProgressBar(ScreenDimmerData* d, HWND parent) {
 	// Set the background color to black (RGB value)
 	SendMessage(progressBar, PBM_SETBKCOLOR, 0, (LPARAM)d->backgroundColor);
 	return progressBar;
+}
+
+static HWND CreateMessageLabel(ScreenDimmerData* d, HWND parent) {
+	const int LabelX = (int)(d->screenWidth * d->progressBarOffset / 2.0);
+	const int LabelY = 30;
+	const int LabelWidth = (int)(d->screenWidth * (1 - d->progressBarOffset));
+	const int LabelHeight = 30;
+
+	HWND label = CreateWindowEx(
+		0,
+		_T("STATIC"),
+		_T(""),
+		WS_CHILD | WS_VISIBLE | SS_LEFT,
+		LabelX, LabelY, LabelWidth, LabelHeight,
+		parent, NULL, GetModuleHandle(NULL), NULL);
+
+	HFONT hFont = CreateFont(
+		24, 0, 0, 0, FW_BOLD, FALSE, FALSE, FALSE,
+		DEFAULT_CHARSET, OUT_OUTLINE_PRECIS, CLIP_DEFAULT_PRECIS,
+		0, VARIABLE_PITCH, _T("Arial"));
+	SendMessage(label, WM_SETFONT, (WPARAM)hFont, TRUE);
+
+	return label;
+}
+
+static void UpdateMessageLabel(ScreenDimmerData* d) {
+	if (d->messageLabel && d->winsExist) {
+		SetWindowText(d->messageLabel, (d->message + " + " + d->inputHolder).c_str());
+		ShowWindow(d->messageLabel, SW_SHOW);
+	}
+	else {
+		ShowWindow(d->messageLabel, SW_HIDE);
+	}
 }
