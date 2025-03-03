@@ -1,3 +1,5 @@
+// ScreenDimmer.cpp
+
 //#include "stdafx.h"
 
 #define _WIN32_WINNT 0x500
@@ -203,8 +205,9 @@ static LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM l
         }
 
         if (strToLower(d->inputHolder) == strToLower(d->password)) {
-            PostQuitMessage(0);
-        }
+			d->isPasswordEntered = true;
+            //PostQuitMessage(0);
+		}
     }
 
     return DefWindowProc(hwnd, uMsg, wParam, lParam);

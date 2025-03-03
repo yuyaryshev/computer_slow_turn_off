@@ -23,6 +23,7 @@ async function main() {
 	screenDimmer.setState(1);		
 	await awaitDelay(2000);
 	screenDimmer.setState(0);		
+	return
 	await awaitDelay(2000);
 	screenDimmer.setState(1);		
 	await awaitDelay(2000);
