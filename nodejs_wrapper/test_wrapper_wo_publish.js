@@ -32,8 +32,11 @@ async function main() {
 	
 	screenDimmer.setState(0.1);
 //	screenDimmer.setState(1);
-	for(let i=0; i<20000; i++) {
+	for(let i=0; i<200000; i++) {
 		screenDimmer.setMessage(`Changed long message. Измененное сообщение i=${i}`);		
+		screenDimmer.setState(0.3);
+		//await awaitDelay(100);
+		//screenDimmer.setState(0);		
 		if(screenDimmer.isPasswordEntered()) {
 			return;
 		}

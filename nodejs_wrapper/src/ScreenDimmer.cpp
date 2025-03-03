@@ -56,10 +56,19 @@ static double adjustedProgress(double p);
 
 static void YDoEventLoop() {
 	MSG msg;
-	while (GetMessage(&msg, NULL, 0, 0)) {
+	for (auto i = 0; i < 2; i++) {
+		auto r = GetMessage(&msg, NULL, 0, 0);
+		if (!r) { 
+			break; 
+		}
 		TranslateMessage(&msg);
 		DispatchMessage(&msg);
 	}
+	
+//	while (GetMessage(&msg, NULL, 0, 0)) {
+//		TranslateMessage(&msg);
+//		DispatchMessage(&msg);
+//	}
 }
 
 ScreenDimmer::ScreenDimmer(long screenWidth, long screenHeight) {
@@ -112,7 +121,13 @@ const std::string& ScreenDimmer::getMessage() {
 }
 
 void ScreenDimmer::setMessage(const std::string& message) {
+	if (d->message == message) {
+		return;
+	}
+
 	d->message = message;
+	SetWindowText(d->messageLabel, (d->message).c_str());
+	YDoEventLoop();	
 };
 
 bool ScreenDimmer::isPasswordEntered() {
@@ -328,7 +343,7 @@ static HWND CreateMessageLabel(ScreenDimmerData* d, HWND parent) {
 
 static void UpdateMessageLabel(ScreenDimmerData* d) {
 	if (d->messageLabel && d->winsExist) {
-		SetWindowText(d->messageLabel, (d->message + " + " + d->inputHolder).c_str());
+		SetWindowText(d->messageLabel, (d->message).c_str());
 		ShowWindow(d->messageLabel, SW_SHOW);
 	}
 	else {
