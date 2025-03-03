@@ -49,6 +49,14 @@ static void DestroyTopMostWindow(HWND hwnd);
 static void UpdateWindowSize(HWND hwnd, int x, int y, int width, int height);
 static double adjustedProgress(double p);
 
+static void YDoEventLoop() {
+	MSG msg;
+	while (GetMessage(&msg, NULL, 0, 0)) {
+		TranslateMessage(&msg);
+		DispatchMessage(&msg);
+	}
+}
+
 ScreenDimmer::ScreenDimmer(long screenWidth, long screenHeight) {
 	d = new ScreenDimmerData();
 	d->screenWidth = screenWidth;
@@ -65,6 +73,7 @@ ScreenDimmer::~ScreenDimmer() {
 };
 
 double ScreenDimmer::getState() {
+	YDoEventLoop();
 	return d->state;
 }
 
@@ -94,6 +103,7 @@ void ScreenDimmer::setPassword(const std::string& password) {
 };
 
 bool ScreenDimmer::isPasswordEntered() {
+	YDoEventLoop();
 	return d->isPasswordEntered;
 }
 
@@ -208,14 +218,17 @@ static LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM l
 			d->isPasswordEntered = true;
             //PostQuitMessage(0);
 		}
-    }
+	}
+	else if(uMsg == WM_CLOSE) {
+		return 0;
+	}
 
     return DefWindowProc(hwnd, uMsg, wParam, lParam);
 }
 
 static HWND CreateTopMostWindow(ScreenDimmerData* d) {
 	HWND hwnd = CreateWindowEx(
-		WS_EX_TOPMOST,
+		WS_EX_TOPMOST | WS_EX_TOOLWINDOW,
 		_T("ScreenDimmer"),
 		NULL,
 		WS_POPUP | WS_VISIBLE,

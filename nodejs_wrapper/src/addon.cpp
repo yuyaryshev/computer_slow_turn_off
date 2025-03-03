@@ -57,7 +57,7 @@ namespace {
             v8::Isolate* isolate = args.GetIsolate();
             v8::Local<v8::Context> context = isolate->GetCurrentContext();
 
-            double state = 1.001;
+            double state = 1.003;
             args.GetReturnValue().Set(v8::Number::New(isolate, state));
         }
 
