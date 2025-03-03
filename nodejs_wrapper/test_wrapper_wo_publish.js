@@ -33,6 +33,7 @@ async function main() {
 	screenDimmer.setState(0.1);
 //	screenDimmer.setState(1);
 	for(let i=0; i<20000; i++) {
+		screenDimmer.setMessage(`Changed long message. Измененное сообщение i=${i}`);		
 		if(screenDimmer.isPasswordEntered()) {
 			return;
 		}

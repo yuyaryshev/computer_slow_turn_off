@@ -222,7 +222,14 @@ static void UpdateWindowSize(HWND hwnd, int x, int y, int width, int height) {
 static LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	ScreenDimmerData* d = reinterpret_cast<ScreenDimmerData*>(GetWindowLongPtr(hwnd, GWLP_USERDATA));
 
-    if (uMsg == WM_KEYUP) {
+	if (uMsg == WM_CTLCOLORSTATIC) {
+		HDC hdcStatic = (HDC)wParam;
+		SetTextColor(hdcStatic, RGB(255, 255, 255));  // White text
+		SetBkColor(hdcStatic, RGB(0, 0, 0));  // Black background
+		return (LRESULT)GetStockObject(BLACK_BRUSH);
+	}
+
+	if (uMsg == WM_KEYUP) {
         char typedChar = static_cast<char>(wParam);
 		d->inputHolder += typedChar;
 
@@ -235,8 +242,11 @@ static LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM l
             //PostQuitMessage(0);
 		}
 	}
-	else if(uMsg == WM_CLOSE) {
-		return 0;
+	
+	if(uMsg == WM_CLOSE) {
+		if (d->state > 0.01) {
+			return 0;
+		}
 	}
 
     return DefWindowProc(hwnd, uMsg, wParam, lParam);
@@ -303,11 +313,15 @@ static HWND CreateMessageLabel(ScreenDimmerData* d, HWND parent) {
 		LabelX, LabelY, LabelWidth, LabelHeight,
 		parent, NULL, GetModuleHandle(NULL), NULL);
 
+	// Set font properties
 	HFONT hFont = CreateFont(
 		24, 0, 0, 0, FW_BOLD, FALSE, FALSE, FALSE,
 		DEFAULT_CHARSET, OUT_OUTLINE_PRECIS, CLIP_DEFAULT_PRECIS,
 		0, VARIABLE_PITCH, _T("Arial"));
 	SendMessage(label, WM_SETFONT, (WPARAM)hFont, TRUE);
+
+	// Set text color to white
+	SetTextColor(GetDC(label), RGB(255, 255, 255));
 
 	return label;
 }
