@@ -1,0 +1,55 @@
+import { ServerEnv } from "../../ServerEnv";
+import { ApiWithSession, implementApi } from "@yuyaryshev/ytransport_common";
+import {
+    statusApiDefinition,
+    personDeleteApiDefinition,
+    personGetApiDefinition,
+    personPutApiDefinition,
+    personQueryApiDefinition,
+    extendedFieldCategoriesToObj,
+} from "@yuyaryshev/intertask_types";
+import { ApiPrereq } from "../Base/BaseApi";
+
+export function publishPersonApi(apiPrereq: ApiPrereq) {
+    implementApi(
+        apiPrereq.transportServer,
+        personQueryApiDefinition,
+        async (data: ApiWithSession & typeof personQueryApiDefinition.request): Promise<typeof personQueryApiDefinition.response> => {
+            return {
+                objects: (await apiPrereq.domains.Person.query(extendedFieldCategoriesToObj(data.extend))).map((person) =>
+                    apiPrereq.domains.Person.serialize(person),
+                ),
+            };
+        },
+    );
+
+    implementApi(
+        apiPrereq.transportServer,
+        personGetApiDefinition,
+        async (data: ApiWithSession & typeof personGetApiDefinition.request): Promise<typeof personGetApiDefinition.response> => {
+            const obj = await apiPrereq.domains.Person.get(data.id, extendedFieldCategoriesToObj(data.extend));
+            if (!obj) {
+                throw new Error(`CODE00000000 ${"Person.id"} = ${data.id} does not exist!`);
+            }
+            return await apiPrereq.domains.Person.serialize(obj);
+        },
+    );
+
+    implementApi(
+        apiPrereq.transportServer,
+        personPutApiDefinition,
+        async (data: ApiWithSession & typeof personPutApiDefinition.request): Promise<typeof personPutApiDefinition.response> => {
+            await apiPrereq.domains.Person.upsert(data);
+            return {};
+        },
+    );
+
+    implementApi(
+        apiPrereq.transportServer,
+        personDeleteApiDefinition,
+        async (data: ApiWithSession & typeof personDeleteApiDefinition.request): Promise<typeof personDeleteApiDefinition.response> => {
+            await apiPrereq.domains.Person.delete(data.id);
+            return {};
+        },
+    );
+}

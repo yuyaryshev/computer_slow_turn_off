@@ -1,0 +1,56 @@
+// DOMAIN(ScheduleSerie)
+import { ServerEnv } from "../../ServerEnv";
+import { ApiWithSession, implementApi } from "@yuyaryshev/ytransport_common";
+import {
+    statusApiDefinition,
+    scheduleSerieDeleteApiDefinition,
+    scheduleSerieGetApiDefinition,
+    scheduleSeriePutApiDefinition,
+    scheduleSerieQueryApiDefinition,
+    extendedFieldCategoriesToObj,
+} from "@yuyaryshev/intertask_types";
+import { ApiPrereq } from "../Base/BaseApi";
+
+export function publishScheduleSerieApi(apiPrereq: ApiPrereq) {
+    implementApi(
+        apiPrereq.transportServer,
+        scheduleSerieQueryApiDefinition,
+        async (data: ApiWithSession & typeof scheduleSerieQueryApiDefinition.request): Promise<typeof scheduleSerieQueryApiDefinition.response> => {
+            return {
+                objects: (await apiPrereq.domains.ScheduleSerie.query(extendedFieldCategoriesToObj(data.extend))).map((ScheduleSerie) =>
+                    apiPrereq.domains.ScheduleSerie.serialize(ScheduleSerie),
+                ),
+            };
+        },
+    );
+
+    implementApi(
+        apiPrereq.transportServer,
+        scheduleSerieGetApiDefinition,
+        async (data: ApiWithSession & typeof scheduleSerieGetApiDefinition.request): Promise<typeof scheduleSerieGetApiDefinition.response> => {
+            const obj = await apiPrereq.domains.ScheduleSerie.get(data.id, extendedFieldCategoriesToObj(data.extend));
+            if (!obj) {
+                throw new Error(`CODE00000000 ${"ScheduleSerie.id"} = ${data.id} does not exist!`);
+            }
+            return await apiPrereq.domains.ScheduleSerie.serialize(obj);
+        },
+    );
+
+    implementApi(
+        apiPrereq.transportServer,
+        scheduleSeriePutApiDefinition,
+        async (data: ApiWithSession & typeof scheduleSeriePutApiDefinition.request): Promise<typeof scheduleSeriePutApiDefinition.response> => {
+            await apiPrereq.domains.ScheduleSerie.upsert(data);
+            return {};
+        },
+    );
+
+    implementApi(
+        apiPrereq.transportServer,
+        scheduleSerieDeleteApiDefinition,
+        async (data: ApiWithSession & typeof scheduleSerieDeleteApiDefinition.request): Promise<typeof scheduleSerieDeleteApiDefinition.response> => {
+            await apiPrereq.domains.ScheduleSerie.delete(data.id);
+            return {};
+        },
+    );
+}

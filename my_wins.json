@@ -1,0 +1,27 @@
+{
+    "x": 0,
+    "wins": {
+        "watch_cjs_backend": {
+            "cmd": "cls & cd times_backend & pnpm run watch:js",
+            "no_run": false
+        },
+        "watch_types_backend": {
+            "cmd": "cls & cd times_backend & pnpm run watch:types",
+            "no_run": false
+        },
+        "cmd": {
+            "cmd": "cls",
+            "no_run": false
+        }
+    },
+    "disabled": {
+        "watch_test_cjs": {
+            "cmd": "cls && pnpm run watch:test:cjs",
+            "no_run": true
+        },
+        "node": {
+            "cmd": "cls && pnpm run precompile && node",
+            "no_run": true
+        }
+    }
+}

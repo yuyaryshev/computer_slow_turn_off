@@ -1,0 +1,21 @@
+{
+    "compilerOptions": {
+        "target": "es6",
+        "module": "commonjs",
+        "lib": ["esnext"],
+        "moduleResolution": "node",
+        "jsx": "react-jsx",
+        "strict": true,
+        "composite": true,
+        "sourceMap": true,
+        "declaration": true,
+        "skipLibCheck": true,
+        "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true,
+        "declarationMap": true,
+        "forceConsistentCasingInFileNames": true,
+        "emitDeclarationOnly": true,
+        "allowJs": false,
+        "checkJs": false
+    }
+}

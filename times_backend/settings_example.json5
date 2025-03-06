@@ -1,0 +1,30 @@
+{
+    db: {
+        recreateSchema: false, // DATA LOSS WARNING!!! If true, drops all tables which matches domain names and creates new ones instead of them.
+        createTestData: false, //  If true - creates test data. !ONLY WORKS IF recreateSchema IS ALSO TRUE, else has no effect
+        client: "mysql", // "better-sqlite3" | "sqlite3" | "pg" | "mysql" | "mssql" | "oracle";
+        version: "7.2", // Verision for pg
+        connection: {
+            // for pg use string instead. Example: "postgres://user:pass@localhost:5432/dbname",
+            filename: "./intertask.db", // The only thing needed for better-sqlite3 & sqlite3 //  "./mydb.sqlite" | ":memory:" | "file:memDb1?mode=memory&cache=shared"
+            host: "127.0.0.1", // This and below - for other databases
+            database: "intertask",
+            user: "root",
+            password: "",
+            port: 3306,
+            searchPath: [],
+            flags: [],
+        },
+        pool: {
+            min: 0,
+            max: 10,
+        },
+    },
+    api: {
+        host: "localhost",
+        port: 3333,
+    },
+    authStorage: {
+        path: "authStorage.db",
+    },
+}
